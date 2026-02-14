@@ -6,7 +6,7 @@ export default function Footer() {
             <div className="container">
                 <div className="footer-grid">
                     <div className="footer-brand">
-                        <h3>💅 Lumière Nails</h3>
+                        <h3>💅 Sofi Luxe Nails</h3>
                         <p>
                             Premium nail art studio offering luxury manicures, pedicures,
                             nail extensions, and bespoke bridal nail art. Your nails, our canvas.
@@ -39,17 +39,17 @@ export default function Footer() {
                         <h4>Contact</h4>
                         <ul className="footer-links">
                             <li><a href="tel:+919876543210">+91 98765 43210</a></li>
-                            <li><a href="mailto:hello@lumierenails.in">hello@lumierenails.in</a></li>
-                            <li><a href="#">Koramangala, Bengaluru</a></li>
+                            <li><a href="mailto:hello@sofiluxenails.in">hello@sofiluxenails.in</a></li>
+                            <li><a href="#">Poonamallee, Chennai</a></li>
                             <li><a href="#">Mon-Sat: 10AM–8PM</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div className="footer-bottom">
-                    <p>&copy; {new Date().getFullYear()} Lumière Nails. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Sofi Luxe Nails. All rights reserved.</p>
                     <div className="footer-socials">
-                        <a href="https://instagram.com/lumiere.nails" target="_blank" rel="noopener noreferrer" aria-label="Instagram">📸</a>
+                        <a href="https://instagram.com/sofi.luxe.nails" target="_blank" rel="noopener noreferrer" aria-label="Instagram">📸</a>
                         <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">💬</a>
                         <a href="#" aria-label="Facebook">📘</a>
                         <a href="#" aria-label="Pinterest">📌</a>

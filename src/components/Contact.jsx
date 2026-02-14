@@ -1,6 +1,6 @@
 export default function Contact() {
     const phone = '919876543210'; // Replace with actual number
-    const whatsappMsg = encodeURIComponent('Hi! I\'d like to book an appointment at Lumière Nails. 💅');
+    const whatsappMsg = encodeURIComponent('Hi! I\'d like to book an appointment at Sofi Luxe Nails. 💅');
 
     return (
         <section id="contact" className="section">
@@ -19,7 +19,7 @@ export default function Contact() {
                             <div className="contact-icon">📍</div>
                             <div className="contact-info">
                                 <h4>Studio Address</h4>
-                                <p>123 Beauty Lane, Koramangala<br />Bengaluru, Karnataka 560034</p>
+                                <p>M S V Park Street, Poonamallee<br />Chennai, Tamil Nadu 600056</p>
                             </div>
                         </div>
 
@@ -35,7 +35,7 @@ export default function Contact() {
                             <div className="contact-icon">📧</div>
                             <div className="contact-info">
                                 <h4>Email</h4>
-                                <p>hello@lumierenails.in</p>
+                                <p>hello@sofiluxenails.in</p>
                             </div>
                         </div>
 
@@ -57,7 +57,7 @@ export default function Contact() {
                                 💬 Chat on WhatsApp
                             </a>
                             <a
-                                href="https://instagram.com/lumiere.nails"
+                                href="https://instagram.com/sofi.luxe.nails"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="btn btn-secondary"
@@ -70,7 +70,7 @@ export default function Contact() {
                     <div>
                         <div className="map-wrapper">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.5934!2d77.6166!3d12.9352!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae144f!2sKoramangala!5e0!3m2!1sen!2sin!4v1"
+                                src="https://maps.google.com/maps?q=M%20S%20V%20Park%20Street%2C%20Poonamallee%2C%20Chennai&t=&z=13&ie=UTF8&iwloc=&output=embed"
                                 allowFullScreen=""
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"

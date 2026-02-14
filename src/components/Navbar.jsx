@@ -23,7 +23,7 @@ export default function Navbar() {
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
         <Link to="/" className="nav-brand">
-          💅 Lumière <span>Nails</span>
+          💅 Sofi Luxe <span>Nails</span>
         </Link>
 
         <div className={`nav-links ${menuOpen ? 'open' : ''}`} onClick={handleLinkClick}>
