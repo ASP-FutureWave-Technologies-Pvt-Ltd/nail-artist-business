@@ -1,7 +1,7 @@
 export default function Testimonials() {
     const reviews = [
         {
-            name: 'Ananya Sharma',
+            name: 'Antony Nivin',
             service: 'Bridal Nail Art',
             rating: 5,
             text: 'Absolutely stunning bridal nails! Priya understood exactly what I wanted and exceeded my expectations. The 3D floral design was a masterpiece. All my guests kept complimenting my nails!',
