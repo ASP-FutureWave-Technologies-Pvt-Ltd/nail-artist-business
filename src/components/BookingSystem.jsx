@@ -10,12 +10,9 @@ const TIME_SLOTS = {
     evening: ['4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM'],
 };
 
-// Simulate some already booked slots
-const BOOKED_SLOTS = {
-    // Format: 'YYYY-MM-DD': ['time1', 'time2']
-};
 
-export default function BookingSystem({ blockedDates = [], onBook }) {
+
+export default function BookingSystem({ blockedDates = [], onBook, bookings = [] }) {
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -25,6 +22,16 @@ export default function BookingSystem({ blockedDates = [], onBook }) {
     const [form, setForm] = useState({ name: '', phone: '', email: '', notes: '' });
     const [submitted, setSubmitted] = useState(false);
     const [showPayment, setShowPayment] = useState(false);
+
+    // Compute booked slots from bookings prop
+    const bookedSlots = useMemo(() => {
+        const slots = {};
+        bookings.forEach(b => {
+            if (!slots[b.date]) slots[b.date] = [];
+            slots[b.date].push(b.time);
+        });
+        return slots;
+    }, [bookings]);
 
     // Generate calendar days
     const calendarDays = useMemo(() => {
@@ -63,7 +70,7 @@ export default function BookingSystem({ blockedDates = [], onBook }) {
     const isBooked = (day) => {
         if (!day) return false;
         const dateStr = formatDate(day);
-        const bookedTimes = BOOKED_SLOTS[dateStr] || [];
+        const bookedTimes = bookedSlots[dateStr] || [];
         const allSlots = [...TIME_SLOTS.morning, ...TIME_SLOTS.afternoon, ...TIME_SLOTS.evening];
         return bookedTimes.length >= allSlots.length;
     };
@@ -71,7 +78,7 @@ export default function BookingSystem({ blockedDates = [], onBook }) {
     const isSlotBooked = (time) => {
         if (!selectedDate) return false;
         const dateStr = formatDate(selectedDate);
-        return (BOOKED_SLOTS[dateStr] || []).includes(time);
+        return (bookedSlots[dateStr] || []).includes(time);
     };
 
     const prevMonth = () => {

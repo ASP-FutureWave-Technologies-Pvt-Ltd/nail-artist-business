@@ -12,9 +12,10 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
+  // Close menu when clicking a link
+  const handleLinkClick = () => {
     setMenuOpen(false);
-  }, [location]);
+  };
 
   const isHome = location.pathname === '/';
 
@@ -25,7 +26,7 @@ export default function Navbar() {
           💅 Lumière <span>Nails</span>
         </Link>
 
-        <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
+        <div className={`nav-links ${menuOpen ? 'open' : ''}`} onClick={handleLinkClick}>
           {isHome ? (
             <>
               <a href="#home" className="nav-link">Home</a>

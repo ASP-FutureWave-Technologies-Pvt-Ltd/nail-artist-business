@@ -47,7 +47,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/booking" element={<BookingPage blockedDates={blockedDates} onBook={handleBook} />} />
+          <Route path="/booking" element={<BookingPage blockedDates={blockedDates} bookings={bookings} onBook={handleBook} />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/admin" element={<AdminPage blockedDates={blockedDates} setBlockedDates={setBlockedDates} bookings={bookings} />} />
         </Routes>
