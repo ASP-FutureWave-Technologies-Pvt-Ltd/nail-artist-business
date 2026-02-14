@@ -41,7 +41,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/nail-artist-business">
       <ScrollToTop />
       <Navbar />
       <main>
