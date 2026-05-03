@@ -25,7 +25,7 @@ function App() {
 
   // Fetch data from backend on load
   useEffect(() => {
-    fetch('http://localhost:5000/api/blocked-dates')
+    fetch(`${import.meta.env.VITE_API_URL}/api/blocked-dates`)
       .then(res => {
         if (res.ok) return res.json();
         return [];
@@ -35,7 +35,7 @@ function App() {
 
     // Note: In a real app, /api/admin/bookings requires JWT auth, but we'll fetch anyway
     // If you add Auth headers, you'd insert them here.
-    fetch('http://localhost:5000/api/admin/bookings', {
+    fetch(`${import.meta.env.VITE_API_URL}/api/admin/bookings`, {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
     })
       .then(res => {
@@ -66,7 +66,7 @@ function App() {
 
   const handleBook = async (booking) => {
     try {
-      const response = await fetch('http://localhost:5000/api/bookings', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -98,14 +98,14 @@ function App() {
     try {
       if (isBlocked) {
         // Unblock
-        const res = await fetch(`http://localhost:5000/api/admin/blocked-dates/${dateStr}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/blocked-dates/${dateStr}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
         });
         if (res.ok) setBlockedDates(prev => prev.filter(d => d !== dateStr));
       } else {
         // Block
-        const res = await fetch(`http://localhost:5000/api/admin/blocked-dates`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/blocked-dates`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

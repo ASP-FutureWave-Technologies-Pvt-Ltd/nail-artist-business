@@ -10,7 +10,7 @@ export default function Hero() {
 
     useEffect(() => {
         // Fetch realtime metrics from the backend if available
-        fetch('http://localhost:5000/api/stats')
+        fetch(`${import.meta.env.VITE_API_URL}/api/stats`)
             .then(res => {
                 if (res.ok) return res.json();
                 return null;
