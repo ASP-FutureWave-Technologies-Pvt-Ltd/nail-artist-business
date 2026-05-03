@@ -38,7 +38,7 @@ export default function Footer() {
                     <div>
                         <h4>Contact</h4>
                         <ul className="footer-links">
-                            <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+                            <li><a href="tel:+918610556720">+91 86105 56720</a></li>
                             <li><a href="mailto:hello@sofiluxenails.in">hello@sofiluxenails.in</a></li>
                             <li><a href="#">Poonamallee, Chennai</a></li>
                             <li><a href="#">Mon-Sat: 10AM–8PM</a></li>
@@ -50,7 +50,7 @@ export default function Footer() {
                     <p>&copy; {new Date().getFullYear()} Sofi Luxe Nails. All rights reserved.</p>
                     <div className="footer-socials">
                         <a href="https://instagram.com/sofi.luxe.nails" target="_blank" rel="noopener noreferrer" aria-label="Instagram">📸</a>
-                        <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">💬</a>
+                        <a href="https://wa.me/918610556720" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">💬</a>
                         <a href="#" aria-label="Facebook">📘</a>
                         <a href="#" aria-label="Pinterest">📌</a>
                     </div>

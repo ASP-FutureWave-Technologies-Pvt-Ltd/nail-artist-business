@@ -45,13 +45,15 @@ export default function Navbar({ user, setUser, userRole, setUserRole }) {
               <>
                 <a href="#home" className="nav-link">Home</a>
                 <a href="#services" className="nav-link">Services</a>
-                <a href="#gallery" className="nav-link">Gallery</a>
+                <a href="#testimonials" className="nav-link">Testimonials</a>
+                <Link to="/gallery" className="nav-link">Gallery</Link>
                 <a href="#contact" className="nav-link">Contact</a>
               </>
             ) : (
               <>
                 <Link to="/" className="nav-link">Home</Link>
                 <Link to="/#services" className="nav-link">Services</Link>
+                <Link to="/#testimonials" className="nav-link">Testimonials</Link>
                 <Link to="/gallery" className="nav-link">Gallery</Link>
                 <Link to="/#contact" className="nav-link">Contact</Link>
               </>

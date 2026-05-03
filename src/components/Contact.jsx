@@ -1,5 +1,5 @@
 export default function Contact() {
-    const phone = '919876543210'; // Replace with actual number
+    const phone = '918610556720'; // Real WhatsApp number
     const whatsappMsg = encodeURIComponent('Hi! I\'d like to book an appointment at Sofi Luxe Nails. 💅');
 
     return (
@@ -27,7 +27,7 @@ export default function Contact() {
                             <div className="contact-icon">📞</div>
                             <div className="contact-info">
                                 <h4>Phone</h4>
-                                <p>+91 98765 43210</p>
+                                <p>+91 86105 56720</p>
                             </div>
                         </div>
 

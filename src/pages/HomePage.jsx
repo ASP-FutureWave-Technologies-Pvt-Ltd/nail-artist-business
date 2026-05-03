@@ -5,14 +5,14 @@ import InstagramPreview from '../components/InstagramPreview';
 import Testimonials from '../components/Testimonials';
 import Contact from '../components/Contact';
 
-export default function HomePage() {
+export default function HomePage({ user }) {
     return (
         <>
             <Hero />
             <About />
             <Services />
             <InstagramPreview />
-            <Testimonials />
+            <Testimonials user={user} />
             <Contact />
         </>
     );

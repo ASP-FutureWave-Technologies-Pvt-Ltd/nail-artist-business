@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SERVICES } from '../components/Services';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -11,6 +11,20 @@ export default function AdminPage({ blockedDates, handleToggleBlock, bookings })
     const [serviceFilter, setServiceFilter] = useState('All');
     const [dateFilter, setDateFilter] = useState('');
     const [sortOrder, setSortOrder] = useState('desc');
+    const [testimonials, setTestimonials] = useState([]);
+
+    useEffect(() => {
+        const fetchAllReviews = async () => {
+            try {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/testimonials`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                const data = await res.json();
+                if (Array.isArray(data)) setTestimonials(data);
+            } catch (e) { console.error(e); }
+        };
+        fetchAllReviews();
+    }, []);
 
     const filteredBookings = bookings
         .filter(b => {
@@ -183,6 +197,45 @@ export default function AdminPage({ blockedDates, handleToggleBlock, bookings })
                                         {b.notes && <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: 4 }}>📝 {b.notes}</div>}
                                     </div>
                                 ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Testimonials List */}
+                <div className="admin-card" style={{ marginTop: 'var(--space-xl)' }}>
+                    <h3 style={{ marginBottom: 'var(--space-md)' }}>💬 All Client Testimonials</h3>
+                    <div className="testimonials-admin-list">
+                        {testimonials.length === 0 ? (
+                            <p style={{ color: 'var(--color-text-secondary)' }}>No testimonials found yet.</p>
+                        ) : (
+                            <div className="admin-table-wrapper" style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                                    <thead style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}>
+                                        <tr>
+                                            <th style={{ padding: '12px', textAlign: 'left' }}>Date</th>
+                                            <th style={{ padding: '12px', textAlign: 'left' }}>Client</th>
+                                            <th style={{ padding: '12px', textAlign: 'left' }}>Rating</th>
+                                            <th style={{ padding: '12px', textAlign: 'left' }}>Comment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {testimonials.map((t, idx) => (
+                                            <tr key={idx} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                                                <td style={{ padding: '12px', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' }}>
+                                                    {new Date(t.created_at).toLocaleDateString()}
+                                                </td>
+                                                <td style={{ padding: '12px', fontWeight: 600 }}>{t.name}</td>
+                                                <td style={{ padding: '12px', color: 'var(--color-primary)' }}>
+                                                    {'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}
+                                                </td>
+                                                <td style={{ padding: '12px', color: 'var(--color-text-secondary)', minWidth: '300px' }}>
+                                                    "{t.content}"
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         )}
                     </div>

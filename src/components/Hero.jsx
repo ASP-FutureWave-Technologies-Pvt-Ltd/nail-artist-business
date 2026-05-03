@@ -3,29 +3,49 @@ import { useState, useEffect } from 'react';
 
 export default function Hero() {
     const [stats, setStats] = useState({
-        customers: '2000+',
-        bookings: '3500+',
-        reviews: '4.9'
+        customers: '0+',
+        bookings: '0+',
+        reviews: '5.0'
     });
+    const [nextAvailable, setNextAvailable] = useState({ day: 'Today', time: '2:00 PM' });
 
     useEffect(() => {
-        // Fetch realtime metrics from the backend if available
         fetch(`${import.meta.env.VITE_API_URL}/api/stats`)
-            .then(res => {
-                if (res.ok) return res.json();
-                return null;
-            })
+            .then(res => res.ok ? res.json() : null)
             .then(data => {
                 if (data) {
-                    setStats({
-                        customers: `${data.customers}+`,
-                        bookings: `${data.bookings}+`,
-                        reviews: '4.9' // Static rating for now
-                    });
+                    animateCount('customers', data.customers);
+                    animateCount('bookings', data.bookings);
+                    setStats(prev => ({ ...prev, reviews: data.reviews }));
                 }
             })
             .catch(() => { });
+
+        fetch(`${import.meta.env.VITE_API_URL}/api/next-available`)
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+                if (data) setNextAvailable(data);
+            })
+            .catch(() => { });
     }, []);
+
+    const animateCount = (key, target) => {
+        let current = 0;
+        const duration = 1500; // 1.5 seconds
+        const stepTime = 20;
+        const totalSteps = duration / stepTime;
+        const increment = target / totalSteps;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                setStats(prev => ({ ...prev, [key]: `${target}+` }));
+                clearInterval(timer);
+            } else {
+                setStats(prev => ({ ...prev, [key]: `${Math.floor(current)}+` }));
+            }
+        }, stepTime);
+    };
 
     return (
         <section id="home" className="hero">
@@ -71,7 +91,7 @@ export default function Hero() {
                             <div className="hero-float-card top-right">
                                 <div className="float-icon">💎</div>
                                 <div className="float-label">Next Available</div>
-                                <div className="float-value">Today, 2:00 PM</div>
+                                <div className="float-value">{nextAvailable.day}, {nextAvailable.time}</div>
                             </div>
                             <div className="hero-float-card bottom-left">
                                 <div className="float-icon">⭐</div>

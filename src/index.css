@@ -83,7 +83,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: var(--nav-height);
+  scroll-padding-top: 60px;
 }
 
 body {
@@ -170,7 +170,7 @@ textarea {
 }
 
 .section {
-  padding: var(--space-3xl) 0;
+  padding: var(--space-xl) 0 var(--space-3xl);
 }
 
 .section-alt {
@@ -311,7 +311,7 @@ textarea {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: var(--space-md);
 }
 
 .nav-link {
@@ -1611,8 +1611,8 @@ textarea {
   }
 }
 
-/* ── Tablets Portrait (≤768px) ── */
-@media (max-width: 768px) {
+/* ── Tablets Portrait (≤1050px) ── */
+@media (max-width: 1050px) {
   :root {
     --nav-height: 64px;
     --space-3xl: 5rem;

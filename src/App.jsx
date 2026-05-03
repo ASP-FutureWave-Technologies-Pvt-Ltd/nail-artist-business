@@ -126,7 +126,7 @@ function App() {
       <Navbar user={user} setUser={setUser} userRole={userRole} setUserRole={setUserRole} />
       <main>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage user={user} />} />
           <Route path="/booking" element={<BookingPage user={user} blockedDates={blockedDates} bookings={bookings} onBook={handleBook} />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/admin" element={<AdminPage user={user} blockedDates={blockedDates} handleToggleBlock={handleToggleBlockDate} bookings={bookings} />} />
