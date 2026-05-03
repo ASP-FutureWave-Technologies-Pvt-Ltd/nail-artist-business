@@ -1,12 +1,28 @@
 import { useState } from 'react';
+import { SERVICES } from '../components/Services';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export default function AdminPage({ blockedDates, setBlockedDates, bookings }) {
+export default function AdminPage({ blockedDates, handleToggleBlock, bookings }) {
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
+    const [serviceFilter, setServiceFilter] = useState('All');
+    const [dateFilter, setDateFilter] = useState('');
+    const [sortOrder, setSortOrder] = useState('desc');
+
+    const filteredBookings = bookings
+        .filter(b => {
+            const matchesService = serviceFilter === 'All' || b.service === serviceFilter;
+            const matchesDate = !dateFilter || b.date === dateFilter;
+            return matchesService && matchesDate;
+        })
+        .sort((a, b) => {
+            const dateA = new Date(`${a.date} ${a.time}`);
+            const dateB = new Date(`${b.date} ${b.time}`);
+            return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+        });
 
     const calendarDays = (() => {
         const firstDay = new Date(currentYear, currentMonth, 1).getDay();
@@ -26,15 +42,12 @@ export default function AdminPage({ blockedDates, setBlockedDates, bookings }) {
     const toggleBlock = (day) => {
         if (!day) return;
         const dateStr = formatDate(day);
-        if (blockedDates.includes(dateStr)) {
-            setBlockedDates(blockedDates.filter(d => d !== dateStr));
-        } else {
-            setBlockedDates([...blockedDates, dateStr]);
-        }
+        const isBlocked = blockedDates.includes(dateStr);
+        handleToggleBlock(dateStr, isBlocked);
     };
 
     const removeBlocked = (dateStr) => {
-        setBlockedDates(blockedDates.filter(d => d !== dateStr));
+        handleToggleBlock(dateStr, true); // true = it IS blocked currently, so unblock it
     };
 
     const prevMonth = () => {
@@ -105,12 +118,51 @@ export default function AdminPage({ blockedDates, setBlockedDates, bookings }) {
 
                     {/* Bookings List */}
                     <div className="admin-card">
-                        <h3 style={{ marginBottom: 'var(--space-md)' }}>📋 Recent Bookings</h3>
-                        {bookings.length === 0 ? (
-                            <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem' }}>No bookings yet. Bookings will appear here once customers start booking.</p>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-md)' }}>
+                            <h3 style={{ margin: 0 }}>📋 Recent Bookings</h3>
+                        </div>
+
+                        {/* Filters Row */}
+                        <div style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap', marginBottom: 'var(--space-md)' }}>
+                            <div style={{ flex: 1, minWidth: '150px' }}>
+                                <label style={{ fontSize: '0.75rem', fontWeight: 600, display: 'block', marginBottom: 4 }}>Filter by Service</label>
+                                <select
+                                    value={serviceFilter}
+                                    onChange={(e) => setServiceFilter(e.target.value)}
+                                    style={{ width: '100%', padding: '6px 10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '0.85rem' }}
+                                >
+                                    <option value="All">All Services</option>
+                                    {SERVICES.map((s, idx) => (
+                                        <option key={idx} value={s.name}>{s.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div style={{ flex: 1, minWidth: '150px' }}>
+                                <label style={{ fontSize: '0.75rem', fontWeight: 600, display: 'block', marginBottom: 4 }}>Filter by Date</label>
+                                <input
+                                    type="date"
+                                    value={dateFilter}
+                                    onChange={(e) => setDateFilter(e.target.value)}
+                                    style={{ width: '100%', padding: '6px 10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '0.85rem' }}
+                                />
+                            </div>
+
+                            <div style={{ alignSelf: 'flex-end' }}>
+                                <button
+                                    onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                                    style={{ padding: '7px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', background: 'white', fontSize: '0.8rem', cursor: 'pointer', height: 'fit-content' }}
+                                >
+                                    {sortOrder === 'asc' ? '📅 Oldest First' : '📅 Newest First'}
+                                </button>
+                            </div>
+                        </div>
+
+                        {filteredBookings.length === 0 ? (
+                            <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem' }}>No bookings found matching your filters.</p>
                         ) : (
-                            <div>
-                                {bookings.map((b, i) => (
+                            <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                                {filteredBookings.map((b, i) => (
                                     <div key={i} style={{
                                         padding: 'var(--space-md)',
                                         background: 'var(--color-surface)',
@@ -139,3 +191,4 @@ export default function AdminPage({ blockedDates, setBlockedDates, bookings }) {
         </div>
     );
 }
+

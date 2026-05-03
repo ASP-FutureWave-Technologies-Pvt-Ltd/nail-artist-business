@@ -136,6 +136,32 @@ textarea {
   font-family: var(--font-body);
 }
 
+/* ── Custom Scrollbar ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--nude-50);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pink-200);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--nude-50);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pink-300);
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink-200) var(--nude-50);
+}
+
 /* ── Layout ── */
 .container {
   max-width: var(--container);
@@ -1490,6 +1516,8 @@ textarea {
   border-left: 4px solid #e74c3c;
 }
 
+
+
 /* ============================================
    RESPONSIVE — All Devices
    ============================================ */
@@ -2210,4 +2238,3 @@ textarea {
     background: #fff;
   }
 }
-

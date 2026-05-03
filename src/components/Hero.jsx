@@ -1,6 +1,32 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function Hero() {
+    const [stats, setStats] = useState({
+        customers: '2000+',
+        bookings: '3500+',
+        reviews: '4.9'
+    });
+
+    useEffect(() => {
+        // Fetch realtime metrics from the backend if available
+        fetch('http://localhost:5000/api/stats')
+            .then(res => {
+                if (res.ok) return res.json();
+                return null;
+            })
+            .then(data => {
+                if (data) {
+                    setStats({
+                        customers: `${data.customers}+`,
+                        bookings: `${data.bookings}+`,
+                        reviews: '4.9' // Static rating for now
+                    });
+                }
+            })
+            .catch(() => { });
+    }, []);
+
     return (
         <section id="home" className="hero">
             <div className="container">
@@ -21,15 +47,15 @@ export default function Hero() {
                         </div>
                         <div className="hero-stats animate-fade-up d4">
                             <div className="hero-stat">
-                                <strong>2000+</strong>
+                                <strong>{stats.customers}</strong>
                                 <span>Happy Clients</span>
                             </div>
                             <div className="hero-stat">
-                                <strong>8+</strong>
-                                <span>Years Experience</span>
+                                <strong>{stats.bookings}</strong>
+                                <span>Appointments</span>
                             </div>
                             <div className="hero-stat">
-                                <strong>4.9</strong>
+                                <strong>{stats.reviews}</strong>
                                 <span>⭐ Rating</span>
                             </div>
                         </div>

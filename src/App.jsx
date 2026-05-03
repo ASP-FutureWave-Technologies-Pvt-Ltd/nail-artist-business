@@ -18,38 +18,118 @@ function ScrollToTop() {
 }
 
 function App() {
-  const [blockedDates, setBlockedDates] = useState(() => {
-    const saved = localStorage.getItem('blockedDates');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [blockedDates, setBlockedDates] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [user, setUser] = useState(localStorage.getItem('username'));
+  const [userRole, setUserRole] = useState(localStorage.getItem('userRole'));
 
-  const [bookings, setBookings] = useState(() => {
-    const saved = localStorage.getItem('bookings');
-    return saved ? JSON.parse(saved) : [];
-  });
-
+  // Fetch data from backend on load
   useEffect(() => {
-    localStorage.setItem('blockedDates', JSON.stringify(blockedDates));
-  }, [blockedDates]);
+    fetch('http://localhost:5000/api/blocked-dates')
+      .then(res => {
+        if (res.ok) return res.json();
+        return [];
+      })
+      .then(data => setBlockedDates(Array.isArray(data) ? data : []))
+      .catch(err => console.error("Error fetching blocked dates:", err));
 
-  useEffect(() => {
-    localStorage.setItem('bookings', JSON.stringify(bookings));
-  }, [bookings]);
+    // Note: In a real app, /api/admin/bookings requires JWT auth, but we'll fetch anyway
+    // If you add Auth headers, you'd insert them here.
+    fetch('http://localhost:5000/api/admin/bookings', {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
+    })
+      .then(res => {
+        if (res.ok) return res.json();
+        return [];
+      })
+      .then(data => {
+        if (!data || !Array.isArray(data)) return;
+        const mapped = data.map(b => {
+          let timeFormatted = b.booking_time;
+          if (timeFormatted && !timeFormatted.includes('AM') && !timeFormatted.includes('PM')) {
+            const [h, m] = timeFormatted.split(':');
+            const hour = parseInt(h, 10);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hr12 = hour % 12 || 12;
+            timeFormatted = `${hr12}:${m} ${ampm}`;
+          }
+          return {
+            ...b,
+            date: b.booking_date,
+            time: timeFormatted
+          };
+        });
+        setBookings(mapped);
+      })
+      .catch(err => console.error("Error fetching bookings:", err));
+  }, []);
 
-  const handleBook = (booking) => {
-    setBookings(prev => [booking, ...prev]);
+  const handleBook = async (booking) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: booking.name,
+          email: booking.email,
+          phone: booking.phone,
+          service: booking.service,
+          booking_date: booking.date,
+          booking_time: booking.time,
+        })
+      });
+
+      if (response.ok) {
+        const newBooking = await response.json();
+        setBookings(prev => [
+          { ...booking, id: newBooking.id },
+          ...prev
+        ]);
+      } else {
+        const err = await response.json();
+        alert(err.error || "Failed to book");
+      }
+    } catch (e) {
+      alert("Error talking to server");
+    }
+  };
+
+  const handleToggleBlockDate = async (dateStr, isBlocked) => {
+    try {
+      if (isBlocked) {
+        // Unblock
+        const res = await fetch(`http://localhost:5000/api/admin/blocked-dates/${dateStr}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
+        });
+        if (res.ok) setBlockedDates(prev => prev.filter(d => d !== dateStr));
+      } else {
+        // Block
+        const res = await fetch(`http://localhost:5000/api/admin/blocked-dates`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+          },
+          body: JSON.stringify({ blocked_date: dateStr, reason: 'Admin blocked' })
+        });
+        if (res.ok) setBlockedDates(prev => [...prev, dateStr]);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
     <BrowserRouter basename="/nail-artist-business">
       <ScrollToTop />
-      <Navbar />
+      <Navbar user={user} setUser={setUser} userRole={userRole} setUserRole={setUserRole} />
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/booking" element={<BookingPage blockedDates={blockedDates} bookings={bookings} onBook={handleBook} />} />
+          <Route path="/booking" element={<BookingPage user={user} blockedDates={blockedDates} bookings={bookings} onBook={handleBook} />} />
           <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/admin" element={<AdminPage blockedDates={blockedDates} setBlockedDates={setBlockedDates} bookings={bookings} />} />
+          <Route path="/admin" element={<AdminPage user={user} blockedDates={blockedDates} handleToggleBlock={handleToggleBlockDate} bookings={bookings} />} />
         </Routes>
       </main>
       <Footer />

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { SERVICES } from './Services';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -12,16 +12,37 @@ const TIME_SLOTS = {
 
 
 
-export default function BookingSystem({ blockedDates = [], onBook, bookings = [] }) {
+export default function BookingSystem({ user, blockedDates = [], onBook, bookings = [] }) {
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState('');
     const [selectedService, setSelectedService] = useState('');
-    const [form, setForm] = useState({ name: '', phone: '', email: '', notes: '' });
+    const [form, setForm] = useState({
+        name: localStorage.getItem('userRealName') || localStorage.getItem('username') || '',
+        phone: localStorage.getItem('userPhone') || '',
+        email: localStorage.getItem('userEmail') || '',
+        notes: ''
+    });
     const [submitted, setSubmitted] = useState(false);
     const [showPayment, setShowPayment] = useState(false);
+    const [user_prop] = [user]; // Rename internally if needed
+
+    useEffect(() => {
+        setForm({
+            name: localStorage.getItem('userRealName') || localStorage.getItem('username') || '',
+            phone: localStorage.getItem('userPhone') || '',
+            email: localStorage.getItem('userEmail') || '',
+            notes: ''
+        });
+    }, [user]);
+
+    useEffect(() => {
+        if (submitted) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [submitted]);
 
     // Compute booked slots from bookings prop
     const bookedSlots = useMemo(() => {
@@ -128,20 +149,32 @@ export default function BookingSystem({ blockedDates = [], onBook, bookings = []
 
     if (submitted) {
         return (
-            <section className="section booking-section">
-                <div className="container" style={{ maxWidth: 600, textAlign: 'center', padding: 'var(--space-3xl) var(--space-md)' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: 'var(--space-md)' }}>🎉</div>
-                    <h2 className="section-title">Booking Confirmed!</h2>
-                    <p style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--space-lg)', fontSize: '1.05rem' }}>
+            <section className="section booking-section" style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', paddingTop: 'var(--nav-height)' }}>
+                <div className="container" style={{ maxWidth: 600, textAlign: 'center', padding: 'var(--space-xl) var(--space-md)', margin: '0 auto' }}>
+                    <div style={{ fontSize: '3.5rem', marginBottom: 'var(--space-sm)' }}>🎉</div>
+                    <h2 style={{ fontSize: '2.2rem', marginBottom: 'var(--space-sm)', color: 'var(--color-primary)' }}>Booking Confirmed!</h2>
+                    <p style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--space-md)', fontSize: '1rem', lineHeight: '1.6' }}>
                         Thank you, <strong>{form.name}</strong>! Your appointment for <strong>{selectedService}</strong> on{' '}
                         <strong>{selectedDate} {MONTHS[currentMonth]} {currentYear}</strong> at <strong>{selectedTime}</strong> has been booked.
-                        We'll send you a reminder before your appointment.
+                    </p>
+                    <p style={{ fontSize: '0.95rem', color: 'var(--color-text-tertiary)', marginBottom: 'var(--space-lg)' }}>
+                        We've saved your details for next time. We'll send you a reminder shortly!
                     </p>
                     <div style={{ display: 'flex', gap: 'var(--space-sm)', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button className="btn btn-whatsapp" onClick={whatsappConfirmation}>
                             💬 Confirm on WhatsApp
                         </button>
-                        <button className="btn btn-secondary" onClick={() => { setSubmitted(false); setSelectedDate(null); setSelectedTime(''); setForm({ name: '', phone: '', email: '', notes: '' }); }}>
+                        <button className="btn btn-secondary" onClick={() => {
+                            setSubmitted(false);
+                            setSelectedDate(null);
+                            setSelectedTime('');
+                            setForm({
+                                name: localStorage.getItem('userRealName') || localStorage.getItem('username') || '',
+                                phone: localStorage.getItem('userPhone') || '',
+                                email: localStorage.getItem('userEmail') || '',
+                                notes: ''
+                            });
+                        }}>
                             Book Another
                         </button>
                     </div>
