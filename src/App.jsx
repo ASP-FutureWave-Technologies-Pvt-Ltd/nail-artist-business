@@ -121,7 +121,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter basename="/nail-artist-business">
+    <BrowserRouter>
       <ScrollToTop />
       <Navbar user={user} setUser={setUser} userRole={userRole} setUserRole={setUserRole} />
       <main>
