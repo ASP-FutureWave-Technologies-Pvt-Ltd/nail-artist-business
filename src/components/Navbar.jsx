@@ -95,6 +95,7 @@ export default function Navbar({ user, setUser, userRole, setUserRole }) {
         onLoginSuccess={(username) => {
           setUser(username);
           setUserRole(localStorage.getItem('userRole'));
+          setMenuOpen(false);
         }}
       />
     </>
